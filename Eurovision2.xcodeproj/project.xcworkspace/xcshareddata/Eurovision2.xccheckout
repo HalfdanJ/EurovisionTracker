@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>658D09E0-A1B2-4DB1-B37A-3D18BE7D8A99</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Eurovision2</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>0C3F43D8-4C72-42B7-ADEF-511B2938C65B</key>
+		<string>https://github.com/kylemcdonald/ofxCv.git</string>
+		<key>AC3C4D5B-E25D-46C7-B3E5-965FE101B3AE</key>
+		<string>https://github.com/HalfdanJ/EurovisionTracker.git</string>
+		<key>B8382CE3-FEC5-4F81-B381-21F50AD6C4DA</key>
+		<string>https://github.com/HalfdanJ/ofxUI.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Eurovision2.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>0C3F43D8-4C72-42B7-ADEF-511B2938C65B</key>
+		<string>../../../../../addons/ofxCv</string>
+		<key>AC3C4D5B-E25D-46C7-B3E5-965FE101B3AE</key>
+		<string>../..</string>
+		<key>B8382CE3-FEC5-4F81-B381-21F50AD6C4DA</key>
+		<string>../../../../../addons/ofxUI</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/HalfdanJ/EurovisionTracker.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>AC3C4D5B-E25D-46C7-B3E5-965FE101B3AE</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AC3C4D5B-E25D-46C7-B3E5-965FE101B3AE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Eurovision2</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>0C3F43D8-4C72-42B7-ADEF-511B2938C65B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofxCv</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B8382CE3-FEC5-4F81-B381-21F50AD6C4DA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofxUI</string>
+		</dict>
+	</array>
+</dict>
+</plist>

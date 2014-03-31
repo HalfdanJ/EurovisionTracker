@@ -10,27 +10,46 @@
 
 
 Tracker::Tracker(){
-    patternDefinition = ofVec2f(7,4);
+    patternDefinition = ofVec2f(11,4);
+    thresholdStep = 9;
+    
 }
 
-bool Tracker::update(cv::Mat cvBwImage){
+
+cv::SimpleBlobDetector::Params Tracker::getTrackerParams(){
     cv::SimpleBlobDetector::Params params = cv::SimpleBlobDetector::Params();
     
     //            cout<<params.thresholdStep<<endl;
-    params.minThreshold = 70;
-    params.maxThreshold = 90;
-    params.thresholdStep = 19;
+    params.minThreshold = lowThreshold;
+    params.maxThreshold = highThreshold;
+    params.thresholdStep = thresholdStep;
+    params.minArea = 200;
+    params.filterByConvexity = false;
+    params.filterByCircularity = false;
+    return  params;
+}
+
+vector<cv::KeyPoint>  Tracker::debugTrack(cv::Mat image){
+    vector<cv::KeyPoint> keypoints;
     
+    cv::SimpleBlobDetector * blobDetector =  new cv::SimpleBlobDetector(getTrackerParams());
     
-    int flags = cv::CALIB_CB_ASYMMETRIC_GRID;
+    blobDetector->create("SimpleBlob");
+    blobDetector->detect(image, keypoints);
+    
+    return keypoints;
+}
+
+bool Tracker::update(cv::Mat cvBwImage){
+       int flags = cv::CALIB_CB_ASYMMETRIC_GRID;
     flags += cv::CALIB_CB_CLUSTERING;
     
 
     
     roiRect = cv::Rect(0, 0, 1920, 1080);
     if(lastLocation.x != 0 && lastLocation.y != 0){
-        int roiSize = 400;
-        roiRect = cv::Rect(
+        int roiSize = 600;
+      roiRect = cv::Rect(
                               ofClamp(lastLocation.x-roiSize*0.5,0,1920-roiSize),
                               ofClamp(lastLocation.y-roiSize*0.5,0,1080-roiSize),
                               roiSize,
@@ -53,7 +72,8 @@ bool Tracker::update(cv::Mat cvBwImage){
     
     
     
-    cv::SimpleBlobDetector * blobDetector =  new cv::SimpleBlobDetector(params);
+    cv::SimpleBlobDetector * blobDetector =  new cv::SimpleBlobDetector(getTrackerParams());
+    
     
     bool found = cv::findCirclesGrid( cvImageRoi, patternSize, imagePoints, flags,  blobDetector);
     
@@ -70,10 +90,12 @@ bool Tracker::update(cv::Mat cvBwImage){
         
         
         int c = patternDefinition.y * patternDefinition.x;
+        
+        
         lastLocation = imagePoints[c/2] + cv::Point2f(roiRect.tl().x, roiRect.tl().y);
         
         /** Create some points */
-        cv::Point rook_points[1][4];
+    /*    cv::Point rook_points[1][4];
         int s = imagePoints.size();
         
         rook_points[0][0] = cv::Point( imagePoints[0].x, imagePoints[0].y );
@@ -84,7 +106,7 @@ bool Tracker::update(cv::Mat cvBwImage){
         const cv::Point* ppt[1] = { rook_points[0] };
         int npt[] = { 4 };
         int lineType = 8;
-    /*    cv::fillPoly( cvImageRoi,
+        cv::fillPoly( cvImageRoi,
                      ppt,
                      npt,
                      1,

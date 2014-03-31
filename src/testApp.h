@@ -4,10 +4,17 @@
 #include "ofxCv.h"
 #include "ofxOsc.h"
 #include "Tracker.h"
+#include "ofxXmlSettings.h"
+
 #include <dispatch/dispatch.h>
 
-#define SIMULATOR 1
+//#define SIMULATOR 1
+#define BLACKMAGIC 1
+//#define VIDEO 1
 
+#ifdef BLACKMAGIC
+#include "ofxBlackMagic.h"
+#endif
 
 
 class testApp : public ofBaseApp {
@@ -19,9 +26,16 @@ public:
     
     
     void keyPressed(int key);
+    void keyReleased(int key);
     
-    ofImage img;
+    ofVec3f lastMouse;
+    void mouseMoved( int x, int y );
+    void mouseDragged( int x, int y, int button );
+
+    
     ofImage thresh;
+    
+    ofxXmlSettings settings;
     
     
     vector<Tracker> trackers;
@@ -34,10 +48,28 @@ public:
     cv::Mat cvBwImage;
     cv::Mat cvBwImageClone;
     
+    bool trackerReady;
+    bool setThreshold;
+    
+    int threshold;
+    vector<cv::KeyPoint> blobs;
+
 #ifdef SIMULATOR
     ofFbo simulatorFbo;
     ofVec3f simulatorPos[3];
+    ofImage img;
+
+#endif
     
+#ifdef VIDEO
+    ofVideoPlayer img;
+#endif
     
+#ifdef BLACKMAGIC
+    ofxBlackMagic cam;
+    
+    void exit() {
+		cam.close();
+	}
 #endif
 };
