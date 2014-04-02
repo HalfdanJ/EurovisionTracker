@@ -6,31 +6,29 @@ int patternHeight = 3;
 
 void testApp::setup() {
     
-    
-    
-    
-    
     oscReceiver.setup(8080);
     
-    ofSetFrameRate(50);
+    ofSetFrameRate(25);
     ofSetVerticalSync(true);
     
-    trackerReady = true;
-    
+    //Settings
     settings.loadFile("settings.xml");
     threshold = settings.getValue("threshold", 100);
     
+    //Allocation
     for(int i=0;i<3;i++){
         mask[i].allocate(1920, 1080);
         boxContent[i].allocate(1920, 1080);
         composed[i].allocate(1920, 1080);
     }
     
+    //Scene setup
     ofSetSmoothLighting(true);
+    
     pointLight.setDiffuseColor( ofFloatColor(.85, .85, .55) );
     pointLight.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
     pointLight.setPosition(1000, 300, 0);
-
+    
     pointLight2.setDiffuseColor( ofFloatColor( 238.f/255.f, 57.f/255.f, 135.f/255.f ));
     pointLight2.setSpecularColor(ofFloatColor(.8f, .8f, .9f));
     
@@ -41,11 +39,12 @@ void testApp::setup() {
 	material.setShininess( 120 );
     // the light highlight of the material //
 	material.setSpecularColor(ofColor(255, 255, 255, 255));
-
+    
     
     
     
 #ifdef SIMULATOR
+    //Simulator setup
     simulatorFbo.allocate(1920, 1080);
     
     simulatorPos[0].x = 100;
@@ -59,16 +58,17 @@ void testApp::setup() {
     simulatorPos[2].y = 200;
     simulatorPos[2].z = 100;
     img.allocate(1920, 1080, OF_IMAGE_COLOR);
-    
 #endif
     
 #ifdef BLACKMAGIC
+    //Blackmagic setup
     cam.setup(1920, 1080, 30);
     
 #endif
     
     
 #ifdef VIDEO
+    //Video setup
     img.loadMovie("test.mov");
     img.play();
 #endif
@@ -76,9 +76,35 @@ void testApp::setup() {
     
 }
 
+
+//---------------------------------------------------------------------------------------------------------
+
+
 void testApp::update() {
+    bool update = true;
     
+    updateSimulator();
+
+    
+#ifdef VIDEO
+    img.update();
+#endif
+    
+#ifdef BLACKMAGIC
+    update = cam.update();
+#endif
+    
+    //Update the tracker (if there is a new frame)
+    if(update){
+        updateTracker();
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+void testApp::updateSimulator(){
 #ifdef SIMULATOR
+
     while(oscReceiver.hasWaitingMessages()){
         ofxOscMessage m;
         oscReceiver.getNextMessage(&m);
@@ -93,71 +119,56 @@ void testApp::update() {
                 simulatorPos[i].y = m.getArgAsFloat(i)*1080;
             }
         }
-        
     }
     
-    
-    simulatorFbo.begin();
-    ofClear(0, 0, 0,255);
-    
-    for(int i=0;i<3;i++){
-        ofPushMatrix();
-        ofSetColor(255,255,255);
+    //Draw the simulator fbo image
+    simulatorFbo.begin();{
+        ofClear(0, 0, 0,255);
         
-        
-        ofTranslate(simulatorPos[i].x+mouseX, simulatorPos[i].y+250, -simulatorPos[i].z+300);
-        
-        ofScale(200, 200,200);
-        ofRotate(mouseY, 0, 1, 0);
-        ofRect(0, 0, 1, 1);
-        
-        float sizeX = 0.8;
-        float sizeY = 2*sizeX * (1.0*patternHeight/patternWidth);
-        float r = 0.05;
-        
-        ofTranslate(0.5-(sizeX/2.0)+0.05, 0.5-(sizeY/2.0)+0.05);
-        ofSetColor(0, 0, 0);
-        for(int y=0;y<patternHeight;y++){
-            for(int x=0;x<patternWidth;x++){
-                float offset = 0;
-                if(x%2 == 1){
-                    offset = sizeY*0.5/(patternHeight);
+        for(int i=0;i<3;i++){
+            ofPushMatrix();
+            ofSetColor(255,255,255);
+            
+            
+            ofTranslate(simulatorPos[i].x+mouseX, simulatorPos[i].y+250, -simulatorPos[i].z+300);
+            
+            ofScale(200, 200,200);
+            ofRotate(mouseY, 0, 1, 0);
+            ofRect(0, 0, 1, 1);
+            
+            float sizeX = 0.8;
+            float sizeY = 2*sizeX * (1.0*patternHeight/patternWidth);
+            float r = 0.05;
+            
+            ofTranslate(0.5-(sizeX/2.0)+0.05, 0.5-(sizeY/2.0)+0.05);
+            ofSetColor(0, 0, 0);
+            for(int y=0;y<patternHeight;y++){
+                for(int x=0;x<patternWidth;x++){
+                    float offset = 0;
+                    if(x%2 == 1){
+                        offset = sizeY*0.5/(patternHeight);
+                    }
+                    ofCircle(sizeX*x/(patternWidth),
+                             offset+sizeY*y/(patternHeight),
+                             r);
                 }
-                ofCircle(sizeX*x/(patternWidth),
-                         offset+sizeY*y/(patternHeight),
-                         r);
             }
+            
+            
+            ofPopMatrix();
         }
-        
-        
-        ofPopMatrix();
-    }
-    simulatorFbo.end();
+    }simulatorFbo.end();
     
+    //Put the fbo into the ofImage img (expensive shit)
     ofPixels pixels;
     simulatorFbo.readToPixels(pixels);
-    
     img.setFromPixels(pixels);
-    
 #endif
-    
-    
-    bool update = true;
-    
-#ifdef VIDEO
-    img.update();
-#endif
-    
-#ifdef BLACKMAGIC
-    update = cam.update();
-#endif
-    
-    if(update)
-        updateTracker();
-    
-    
-    
+
 }
+
+
+//---------------------------------------------------------------------------------------------------------
 
 void testApp::updateTracker(){
 #ifdef BLACKMAGIC
@@ -168,7 +179,7 @@ void testApp::updateTracker(){
 #endif
     
     dispatch_queue_t trackerQueue = dispatch_queue_create("com.halfdanj.tracker", 0);
-
+    
     //Run a debug tracker (multithreaded with the other trackers)
     dispatch_async(trackerQueue, ^{
         debugTracker.lowThreshold = threshold;
@@ -198,63 +209,61 @@ void testApp::updateTracker(){
     //Wait for the trackers to complete
     dispatch_sync(trackerQueue, ^{});
     
+    //Delete trackers that have disappeared
     for(int i=0;i<trackers.size();i++){
         if(!trackerFoundPtr[i]){
             cout<<"Delete "<<i<<endl;
             trackers.erase(trackers.begin()+i);
         }
     }
+    
+    //Look for trackers that are the same
     for(int i=0;i<trackers.size();i++){
         for(int u=i+1;u<trackers.size();u++){
-            ofPoint roiTl1 = ofPoint(trackers[i].roiRect.tl().x,trackers[i].roiRect.tl().y);
-            ofPoint p1 = ofPoint(trackers[i].imagePoints[0].x,trackers[i].imagePoints[0].y) + roiTl1;
+            ofPoint roiTl1 = ofxCv::toOf(trackers[i].roiRect.tl());
+            ofPoint p1 = ofxCv::toOf(trackers[i].imagePoints[0]) + roiTl1;
             
-            ofPoint roiTl2 = ofPoint(trackers[u].roiRect.tl().x,trackers[u].roiRect.tl().y);
-            ofPoint p2 = ofPoint(trackers[u].imagePoints[0].x,trackers[u].imagePoints[0].y) + roiTl2;
+            ofPoint roiTl2 = ofxCv::toOf(trackers[u].roiRect.tl());
+            ofPoint p2 = ofxCv::toOf(trackers[u].imagePoints[0]) + roiTl2;
             
             if(p1.distance(p2) < 2 ){
                 trackers.erase(trackers.begin()+u);
             }
-            
         }
-        
     }
     
+    
+    //Add new trackers if there are missing some
     if(trackers.size() < 3){
-        
-        cvBwImageClone = cvBwImage.clone();
-        
+
+        //Draw a rectangle on top of all the other trackers so they dont get tracked
         for(int i=0;i<trackers.size();i++){
-            int lineType = 8;
-            
-            
-            cv::Point rook_points[1][4];
+            cv::Point cornerPoints[4];
             int s = trackers[i].imagePoints.size();
             if(s>0){
-                rook_points[0][3] = cv::Point( trackers[i].imagePoints[0].x, trackers[i].imagePoints[0].y );
-                rook_points[0][1] = cv::Point( trackers[i].imagePoints[s-1].x, trackers[i].imagePoints[s-1].y );
-                rook_points[0][2] = cv::Point( trackers[i].imagePoints[trackers[i].patternDefinition.y-1].x, trackers[i].imagePoints[trackers[i].patternDefinition.y-1].y );
+                cornerPoints[3] = trackers[i].imagePoints[0];
+                cornerPoints[1] = trackers[i].imagePoints[s-1];
+                cornerPoints[2] = trackers[i].imagePoints[trackers[i].patternDefinition.y-1];
+                cornerPoints[0] = trackers[i].imagePoints[s-trackers[i].patternDefinition.y];
                 
-                rook_points[0][0] = cv::Point( trackers[i].imagePoints[s-trackers[i].patternDefinition.y].x, trackers[i].imagePoints[s-trackers[i].patternDefinition.y].y );
-                
-                const cv::Point* ppt[1] = { rook_points[0] };
+                const cv::Point* ppt[1] = { cornerPoints };
                 int npt[] = { 4 };
-                
-                cv::fillPoly( cvBwImageClone,
+                cv::fillPoly( cvBwImage,
                              ppt,
                              npt,
                              1,
                              cv::Scalar( 255, 255, 255 ),
-                             lineType );
+                             8 );
             }
         }
         
+        //Create the new tracker
         Tracker newTracker;
         newTracker.lowThreshold = threshold;
         newTracker.highThreshold = threshold+10;
         newTracker.patternDefinition.x = patternWidth;
         newTracker.patternDefinition.y = patternHeight;
-        bool found = newTracker.update(cvBwImageClone);
+        bool found = newTracker.update(cvBwImage);
         if(found){
             trackers.push_back(newTracker);
         }
@@ -263,14 +272,11 @@ void testApp::updateTracker(){
     
     
 }
+//---------------------------------------------------------------------------------------------------------
 
 void testApp::draw() {
-    
-    
     ofSetColor(255,255,255);
-    
-    
-    
+
     if(setThreshold){
         cv::threshold(cvBwImage, cvBwImage,threshold, 255, cv::THRESH_BINARY);
         ofxCv::drawMat(cvBwImage,0,0,ofGetWidth(),ofGetHeight());
@@ -285,16 +291,14 @@ void testApp::draw() {
         img.draw(0, 0, ofGetWidth(), ofGetHeight());
 #endif
     }
+
+    
     ofPushMatrix();
     ofScale(ofGetWidth(), ofGetHeight());
     
-    //         ofxCv::drawMat(cvBwImage, 0, 0,1,1);
-    
-    
     for(int u=0;u<trackers.size();u++){
         ofPushMatrix();
-        
-        
+
         int s = trackers[u].imagePoints.size();
         for (int i=0; i<s; i++){
             float X=trackers[u].imagePoints[i].x/(1920.);
@@ -349,6 +353,7 @@ void testApp::draw() {
     }
     
 }
+//---------------------------------------------------------------------------------------------------------
 
 void testApp::drawBox(int box){
     
@@ -375,29 +380,29 @@ void testApp::drawBox(int box){
         
         ofDisableDepthTest();
     }mask[box].end();
-
+    
     
     /*trackers[box].getDistortedIntrinsics().loadProjectionMatrix();
-    ofxCv::applyMatrix(trackers[box].modelMatrix);
-
-    ofSetColor(255,0,0);
-    ofRect(0, 0, 10*1.3, 10);*/
+     ofxCv::applyMatrix(trackers[box].modelMatrix);
+     
+     ofSetColor(255,0,0);
+     ofRect(0, 0, 10*1.3, 10);*/
     
     boxContent[box].begin();{
         ofClear(0, 0, 0);
         ofSetHexColor(0x666666);
-    
-      
+        
+        
         ofEnableAlphaBlending();
         
         ofEnableDepthTest();
         
         ofEnableLighting();
-                pointLight.enable();
-         pointLight2.enable();
-         pointLight3.enable();
-         
-         material.begin();
+        pointLight.enable();
+        pointLight2.enable();
+        pointLight3.enable();
+        
+        material.begin();
         
         
         
@@ -411,7 +416,7 @@ void testApp::drawBox(int box){
         ofxCv::applyMatrix(trackers[box].modelMatrix);
         
         ofEnableSmoothing();
-
+        
         ofTranslate(5*patternAspect, 5);
         glScaled(scale, scale, -scale);
         
@@ -468,18 +473,18 @@ void testApp::drawBox(int box){
         img.draw(-15,-2, 30, 30);
         ofPopMatrix();
         
-    
-    
-    
+        
+        
+        
         // material.end();
         ofDisableLighting();
         ofDisableDepthTest();
-    
-    
+        
+        
     } boxContent[box].end();
-
+    
     ofFill();
-
+    
     
     ofSetColor(255,255,255,255);
     
@@ -522,8 +527,9 @@ void testApp::drawBox(int box){
     
     composed[box].draw(0, 0);
     ofPopMatrix();
-
+    
 }
+//---------------------------------------------------------------------------------------------------------
 
 void testApp::keyPressed(int key){
     if(key == 't'){
@@ -533,6 +539,7 @@ void testApp::keyPressed(int key){
         ofToggleFullscreen();
     }
 }
+//---------------------------------------------------------------------------------------------------------
 
 void testApp::keyReleased(int key){
     /*    if(key == 't'){
@@ -540,10 +547,12 @@ void testApp::keyReleased(int key){
      }*/
     
 }
+//---------------------------------------------------------------------------------------------------------
 
 void testApp::mouseMoved(int x, int y){
     lastMouse = ofVec3f(x,y,0);
 }
+//---------------------------------------------------------------------------------------------------------
 
 void testApp::mouseDragged(int x, int y, int button){
     if(setThreshold){

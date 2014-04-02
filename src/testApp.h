@@ -23,6 +23,7 @@ public:
 	
     void update();
     void updateTracker();
+    void updateSimulator();
 
 	void draw();
     void drawBox(int box);
@@ -44,9 +45,7 @@ public:
     
     
     cv::Mat cvBwImage;
-    cv::Mat cvBwImageClone;
     
-    bool trackerReady;
     bool setThreshold;
     
     int threshold;
