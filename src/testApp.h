@@ -8,8 +8,8 @@
 
 #include <dispatch/dispatch.h>
 
-//#define SIMULATOR 1
-#define BLACKMAGIC 1
+#define SIMULATOR 1
+//#define BLACKMAGIC 1
 //#define VIDEO 1
 
 #ifdef BLACKMAGIC
@@ -32,17 +32,12 @@ public:
     void mouseMoved( int x, int y );
     void mouseDragged( int x, int y, int button );
 
-    
-    ofImage thresh;
-    
     ofxXmlSettings settings;
-    
+    ofxOscReceiver oscReceiver;
     
     vector<Tracker> trackers;
     
     vector<cv::KeyPoint> blobKeypoints;
-    
-    ofxOscReceiver oscReceiver;
     
     
     cv::Mat cvBwImage;
@@ -53,6 +48,8 @@ public:
     
     int threshold;
     vector<cv::KeyPoint> blobs;
+    
+    Tracker debugTracker;
 
 #ifdef SIMULATOR
     ofFbo simulatorFbo;

@@ -4,7 +4,7 @@
 #include "ofxCv.h"
 
 
-class Tracker {
+class Tracker : public ofxCv::Calibration {
 public:
     ofVec2f patternDefinition;
     
@@ -25,4 +25,11 @@ public:
     vector<cv::KeyPoint>  debugTrack(cv::Mat image);
     
     cv::SimpleBlobDetector::Params getTrackerParams();
+    
+    ofMatrix4x4 modelMatrix;
+    
+    cv::Size patternSize;
+	vector<cv::Point3f> objectPoints;
+
+
 };

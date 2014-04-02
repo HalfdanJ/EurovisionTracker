@@ -142,10 +142,10 @@ void testApp::updateTracker(){
     cv::cvtColor(cvImage, cvBwImage, CV_RGB2GRAY);
 #endif
     
-    Tracker debugTracker;
+    /*
     debugTracker.lowThreshold = threshold;
     debugTracker.highThreshold = threshold+10;
-    blobs =debugTracker.debugTrack(cvBwImage);
+    blobs =debugTracker.debugTrack(cvBwImage);*/
     
     if(trackerReady){
         trackerReady = false;
@@ -190,7 +190,7 @@ void testApp::updateTracker(){
             
         }
         
-        if(trackers.size() < 2){
+        if(trackers.size() < 3){
             
             cvBwImageClone = cvBwImage.clone();
             
@@ -272,30 +272,30 @@ void testApp::draw() {
         ofTranslate(trackers[u].roiRect.x/1920., trackers[u].roiRect.y/1080.);
         
         
-         int s = trackers[u].imagePoints.size();
-         for (int i=0; i<s; i++){
-         float X=trackers[u].imagePoints[i].x/(1920.);
-         float Y=trackers[u].imagePoints[i].y/(1080.);
-         
-         ofSetColor(255, 0, 0);
-         
-         if(i == 0){
-         ofSetColor(0, 255, 0);
-         }
-         
-         if(i == s-1){
-         ofSetColor(0, 255, 0);
-         }
-         if(i == trackers[u].patternDefinition.y-1){
-         ofSetColor(0, 255, 0);
-         }
-         if(i == s-trackers[u].patternDefinition.y){
-         ofSetColor(0, 255, 0);
-         }
-         
-         
-         ofCircle(X, Y, 0.006);
-         }
+        int s = trackers[u].imagePoints.size();
+        for (int i=0; i<s; i++){
+            float X=trackers[u].imagePoints[i].x/(1920.);
+            float Y=trackers[u].imagePoints[i].y/(1080.);
+            
+            ofSetColor(255, 0, 0);
+            
+            if(i == 0){
+                ofSetColor(0, 255, 0);
+            }
+            
+            if(i == s-1){
+                ofSetColor(0, 255, 0);
+            }
+            if(i == trackers[u].patternDefinition.y-1){
+                ofSetColor(0, 255, 0);
+            }
+            if(i == s-trackers[u].patternDefinition.y){
+                ofSetColor(0, 255, 0);
+            }
+            
+            
+            ofCircle(X, Y, 0.006);
+        }
         
         
         ofSetColor(255, 255, 0);
