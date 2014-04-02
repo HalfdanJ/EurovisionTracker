@@ -1,4 +1,10 @@
-bin/
+
+!bin/
+bin/*
+!bin/data
+bin/data/*.mov
+bin/data/*.mpg
+
 
 #########################
 # .gitignore file for Xcode4 and Xcode5 Source projects
