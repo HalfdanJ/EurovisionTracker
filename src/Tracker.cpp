@@ -79,11 +79,17 @@ bool Tracker::update(cv::Mat img){
         //cameraMatrix = (cv::Mat_<double>(3,3) << 930, 0, 960, 0, 930, 540, 0, 0, 1);
         
         cv::Mat rvec, tvec;
+        
+        
+        cv::Point2f tl = roiRect.tl();
+        for(int i=0;i<imagePoints.size();i++){
+            imagePoints[i] += tl;
+        }
         cv::solvePnP(cv::Mat(objectPoints), cv::Mat(imagePoints), cameraMatrix, getDistCoeffs(), rvec, tvec);
         modelMatrix = ofxCv::makeMatrix(rvec, tvec);
         
         int c = patternDefinition.y * patternDefinition.x;
-        lastLocation = imagePoints[c/2] + cv::Point2f(roiRect.tl().x, roiRect.tl().y);
+        lastLocation = imagePoints[c/2];
 
     } else {
         //Not found

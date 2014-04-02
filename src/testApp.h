@@ -20,9 +20,12 @@
 class testApp : public ofBaseApp {
 public:
 	void setup();
-	void update();
-	void draw();
+	
+    void update();
     void updateTracker();
+
+	void draw();
+    void drawBox(int box);
     
     
     void keyPressed(int key);
@@ -50,12 +53,19 @@ public:
     vector<cv::KeyPoint> blobs;
     
     Tracker debugTracker;
+    
+    ofFbo mask[3];
+    ofFbo boxContent[3];
+    ofFbo composed[3];
+    
+    ofLight pointLight, pointLight2, pointLight3;
+    
+    ofMaterial material;
 
 #ifdef SIMULATOR
     ofFbo simulatorFbo;
     ofVec3f simulatorPos[3];
     ofImage img;
-
 #endif
     
 #ifdef VIDEO
