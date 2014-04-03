@@ -22,23 +22,34 @@ void testApp::setup() {
         composed[i].allocate(1920, 1080);
     }
     
+    //Tracker setup, creates 3 trackers for reuse, since they are expensive to create
+    for(int i=0;i<3;i++){
+        Tracker tracker;
+        tracker.patternDefinition.x = patternWidth;
+        tracker.patternDefinition.y = patternHeight;
+        unusedTrackers.push_back(tracker);
+    }
+    
+    
     //Scene setup
     ofSetSmoothLighting(true);
     
-    pointLight.setDiffuseColor( ofFloatColor(.85, .85, .55) );
-    pointLight.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
-    pointLight.setPosition(1000, 300, 0);
+    pointLight.setDiffuseColor( ofFloatColor(.85, .85, .85) );
+//    pointLight.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
+    pointLight.setPosition(1000, -1000, 5000);
+
     
-    pointLight2.setDiffuseColor( ofFloatColor( 238.f/255.f, 57.f/255.f, 135.f/255.f ));
+  /*  pointLight2.setDiffuseColor( ofFloatColor( 238.f/255.f, 57.f/255.f, 135.f/255.f ));
     pointLight2.setSpecularColor(ofFloatColor(.8f, .8f, .9f));
     
     pointLight3.setDiffuseColor( ofFloatColor(19.f/255.f,94.f/255.f,77.f/255.f) );
     pointLight3.setSpecularColor( ofFloatColor(18.f/255.f,150.f/255.f,135.f/255.f) );
-    
+    */
     // shininess is a value between 0 - 128, 128 being the most shiny //
 	material.setShininess( 120 );
     // the light highlight of the material //
 	material.setSpecularColor(ofColor(255, 255, 255, 255));
+    material.setAmbientColor(ofFloatColor(0.2,0.2,0.2));
     
     
     
@@ -181,11 +192,13 @@ void testApp::updateTracker(){
     dispatch_queue_t trackerQueue = dispatch_queue_create("com.halfdanj.tracker", 0);
     
     //Run a debug tracker (multithreaded with the other trackers)
-    dispatch_async(trackerQueue, ^{
-        debugTracker.lowThreshold = threshold;
-        debugTracker.highThreshold = threshold+10;
-        blobs =debugTracker.debugTrack(cvBwImage);
-    });
+    if(debug){
+        dispatch_async(trackerQueue, ^{
+            debugTracker.lowThreshold = threshold;
+            debugTracker.highThreshold = threshold+10;
+            blobs =debugTracker.debugTrack(cvBwImage);
+        });
+    }
     
     
     bool trackerFound[3] = {false,false,false}, *trackerFoundPtr;
@@ -209,14 +222,6 @@ void testApp::updateTracker(){
     //Wait for the trackers to complete
     dispatch_sync(trackerQueue, ^{});
     
-    //Delete trackers that have disappeared
-    for(int i=0;i<trackers.size();i++){
-        if(!trackerFoundPtr[i]){
-            cout<<"Delete "<<i<<endl;
-            trackers.erase(trackers.begin()+i);
-        }
-    }
-    
     //Look for trackers that are the same
     for(int i=0;i<trackers.size();i++){
         for(int u=i+1;u<trackers.size();u++){
@@ -227,10 +232,22 @@ void testApp::updateTracker(){
             ofPoint p2 = ofxCv::toOf(trackers[u].imagePoints[0]) + roiTl2;
             
             if(p1.distance(p2) < 2 ){
-                trackers.erase(trackers.begin()+u);
+                trackerFound[u] = false;
             }
         }
     }
+    
+    //Delete trackers that have disappeared
+    for(int i=0;i<trackers.size();i++){
+        if(!trackerFoundPtr[i]){
+            cout<<"Delete "<<i<<endl;
+            unusedTrackers.push_back(trackers[i]);
+            trackers.erase(trackers.begin()+i);
+            
+        }
+    }
+    
+
     
     
     //Add new trackers if there are missing some
@@ -258,13 +275,13 @@ void testApp::updateTracker(){
         }
         
         //Create the new tracker
-        Tracker newTracker;
+        Tracker newTracker = unusedTrackers[unusedTrackers.size()-1];
         newTracker.lowThreshold = threshold;
         newTracker.highThreshold = threshold+10;
-        newTracker.patternDefinition.x = patternWidth;
-        newTracker.patternDefinition.y = patternHeight;
+        newTracker.lastLocation = cv::Point();
         bool found = newTracker.update(cvBwImage);
         if(found){
+            unusedTrackers.pop_back();
             trackers.push_back(newTracker);
         }
     }
@@ -293,56 +310,60 @@ void testApp::draw() {
     }
 
     
-    ofPushMatrix();
-    ofScale(ofGetWidth(), ofGetHeight());
     
-    for(int u=0;u<trackers.size();u++){
+    //Debug stuff
+    if(debug){
         ofPushMatrix();
+        ofScale(ofGetWidth(), ofGetHeight());
 
-        int s = trackers[u].imagePoints.size();
-        for (int i=0; i<s; i++){
-            float X=trackers[u].imagePoints[i].x/(1920.);
-            float Y=trackers[u].imagePoints[i].y/(1080.);
+        for(int u=0;u<trackers.size();u++){
+            ofPushMatrix();
             
-            ofSetColor(255, 0, 0);
-            
-            if(i == 0){
-                ofSetColor(0, 255, 0);
+            int s = trackers[u].imagePoints.size();
+            for (int i=0; i<s; i++){
+                float X=trackers[u].imagePoints[i].x/(1920.);
+                float Y=trackers[u].imagePoints[i].y/(1080.);
+                
+                ofSetColor(255, 0, 0);
+                
+                if(i == 0){
+                    ofSetColor(0, 255, 0);
+                }
+                
+                if(i == s-1){
+                    ofSetColor(0, 255, 0);
+                }
+                if(i == trackers[u].patternDefinition.y-1){
+                    ofSetColor(0, 255, 0);
+                }
+                if(i == s-trackers[u].patternDefinition.y){
+                    ofSetColor(0, 255, 0);
+                }
+                
+                
+                ofCircle(X, Y, 0.006);
             }
             
-            if(i == s-1){
-                ofSetColor(0, 255, 0);
-            }
-            if(i == trackers[u].patternDefinition.y-1){
-                ofSetColor(0, 255, 0);
-            }
-            if(i == s-trackers[u].patternDefinition.y){
-                ofSetColor(0, 255, 0);
-            }
             
-            
-            ofCircle(X, Y, 0.006);
+            ofSetColor(255, 255, 0);
+            ofNoFill();
+            ofRect(trackers[u].roiRect.x/1920., trackers[u].roiRect.y/1080.,
+                   trackers[u].roiRect.width/1920., trackers[u].roiRect.height/1080.);
+            ofFill();
+            ofPopMatrix();
         }
         
-        
-        ofSetColor(255, 255, 0);
-        ofNoFill();
-        ofRect(trackers[u].roiRect.x/1920., trackers[u].roiRect.y/1080.,
-               trackers[u].roiRect.width/1920., trackers[u].roiRect.height/1080.);
-        ofFill();
+        int s = blobs.size();
+        for (int i=0; i<s; i++){
+            float X=blobs[i].pt.x/(1920.);
+            float Y=blobs[i].pt.y/(1080.);
+            
+            ofSetColor(255, 255, 0);
+            ofCircle(X, Y, 0.003);
+        }
         ofPopMatrix();
     }
     
-    int s = blobs.size();
-    for (int i=0; i<s; i++){
-        float X=blobs[i].pt.x/(1920.);
-        float Y=blobs[i].pt.y/(1080.);
-        
-        ofSetColor(255, 255, 0);
-        ofCircle(X, Y, 0.003);
-    }
-    
-    ofPopMatrix();
     
     ofSetColor(255,255,255);
     
@@ -399,8 +420,8 @@ void testApp::drawBox(int box){
         
         ofEnableLighting();
         pointLight.enable();
-        pointLight2.enable();
-        pointLight3.enable();
+/*        pointLight2.enable();
+        pointLight3.enable();*/
         
         material.begin();
         
@@ -537,6 +558,10 @@ void testApp::keyPressed(int key){
     }
     if(key=='f'){
         ofToggleFullscreen();
+    }
+
+    if(key=='d'){
+        debug = !debug;
     }
 }
 //---------------------------------------------------------------------------------------------------------

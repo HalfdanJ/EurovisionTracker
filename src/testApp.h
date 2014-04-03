@@ -40,18 +40,12 @@ public:
     ofxOscReceiver oscReceiver;
     
     vector<Tracker> trackers;
-    
-    vector<cv::KeyPoint> blobKeypoints;
-    
+    vector<Tracker> unusedTrackers;
     
     cv::Mat cvBwImage;
-    
-    bool setThreshold;
-    
+
     int threshold;
-    vector<cv::KeyPoint> blobs;
-    
-    Tracker debugTracker;
+    bool setThreshold;
     
     ofFbo mask[3];
     ofFbo boxContent[3];
@@ -60,6 +54,13 @@ public:
     ofLight pointLight, pointLight2, pointLight3;
     
     ofMaterial material;
+    
+    
+    //Debug
+    bool debug;
+    Tracker debugTracker;
+    vector<cv::KeyPoint> blobs;
+    
 
 #ifdef SIMULATOR
     ofFbo simulatorFbo;
