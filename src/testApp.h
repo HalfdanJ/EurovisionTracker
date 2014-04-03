@@ -7,7 +7,7 @@
 #include "ofxXmlSettings.h"
 #include "ofxTimeMeasurements.h"
 #include "ofxRemoteUIServer.h"
-
+#include "ofxSyphon.h"
 #include <dispatch/dispatch.h>
 
 #define SIMULATOR 1
@@ -40,6 +40,7 @@ public:
 
     ofxXmlSettings settings;
     ofxOscReceiver oscReceiver;
+    ofxSyphonClient syphon;
     
     vector<Tracker> trackers;
     vector<Tracker> unusedTrackers;

@@ -44,6 +44,11 @@ void testApp::setup() {
     }
     
     
+    //Syphon
+    syphon.setup();
+//    syphon.set("Syphon","QLab");
+    syphon.set("Screen 1","Millumin");
+    
     //Scene setup
     ofSetSmoothLighting(true);
     
@@ -416,7 +421,6 @@ void testApp::draw() {
     for(int i=0;i<trackers.size();i++){
         drawBox(i);
     }
-    
 }
 //---------------------------------------------------------------------------------------------------------
 
@@ -474,76 +478,56 @@ void testApp::drawBox(int box){
         
         // Set the matrix to the perspective of this marker
         // The origin is in the middle of the marker
-        ofPushMatrix();
-        
-        //Apply 3d
-        trackers[box].getDistortedIntrinsics().loadProjectionMatrix();
-        ofxCv::applyMatrix(trackers[box].modelMatrix);
-        
-        ofEnableSmoothing();
-        
-        ofTranslate(5*patternAspect, 5);
-        glScaled(scale, scale, -scale);
-        
-        
-        ofFill();
-        ofSetColor(150,150,150,255);
-        
-        ofRect(-25, -25, -50, 50, 50);
-        
-        
-        ofPushMatrix();
-        ofRotate(90, 0, 1, 0);
-        ofRect(-0, -25, -25, 50, 50);
-        ofRect(-0, -25, 25, 50, 50);
-        ofPopMatrix();
-        
-        ofPushMatrix();
-        ofRotate(90, 0, 1, 0);
-        ofRotate(90, 1, 0, 0);
-        ofRect(-0, -25, -25, 50, 50);
-        ofRect(-0, -25, 25, 50, 50);
-        ofPopMatrix();
-        
-        ofPopMatrix();
-        
-        
-        
-        
-        ofDisableDepthTest();
-        ofNoFill();
-        ofSetLineWidth(5);
-        ofSetColor(255,255,255,255);
-        
-        ofRect(-25, -25, -50, 50, 50);
-        
-        
-        ofPushMatrix();
-        ofRotate(90, 0, 1, 0);
-        ofRect(-0, -25, -25, 50, 50);
-        ofRect(-0, -25, 25, 50, 50);
-        ofPopMatrix();
-        
-        ofPushMatrix();
-        ofRotate(90, 0, 1, 0);
-        ofRotate(90, 1, 0, 0);
-        ofRect(-0, -25, -25, 50, 50);
-        ofRect(-0, -25, 25, 50, 50);
-        ofPopMatrix();
-        
-        ofPopMatrix();
-        
-        ofPushMatrix();
-        ofTranslate(0, 0,-25);
-        img.draw(-15,-2, 30, 30);
-        ofPopMatrix();
-        
-        
-        
+        ofPushMatrix();{
+            
+            //Apply 3d
+            trackers[box].getDistortedIntrinsics().loadProjectionMatrix();
+            ofxCv::applyMatrix(trackers[box].modelMatrix);
+            
+            ofEnableSmoothing();
+            
+            ofTranslate(5*patternAspect, 5);
+            glScaled(scale, scale, -scale);
+            
+            
+            ofFill();
+            ofSetColor(150,150,150,255);
+            
+            //backwall
+            ofRect(-25, -25, -50, 50, 50);
+            
+            
+            //top/bottom wall
+            ofPushMatrix();{
+                ofRotate(90, 0, 1, 0);
+                ofRect(-0, -25, -25, 50, 50);
+                ofRect(-0, -25, 25, 50, 50);
+            } ofPopMatrix();
+           
+            //Sides wall
+            ofPushMatrix();{
+                ofRotate(90, 0, 1, 0);
+                ofRotate(90, 1, 0, 0);
+                ofRect(-0, -25, -25, 50, 50);
+                ofRect(-0, -25, 25, 50, 50);
+            }ofPopMatrix();
+            
+            
+            ofPushMatrix();{
+                //img.draw(-15,-2, 30, 30);
+                ofFill();
+                ofSetColor(255,255,255);
+                ofTranslate(0, 0,-25);
+                syphon.draw(-25, -25, 50,50);
+                
+            }ofPopMatrix();
+            
+            ofDisableLighting();
+            ofDisableDepthTest();
+            
+        } ofPopMatrix();
         
         // material.end();
-        ofDisableLighting();
-        ofDisableDepthTest();
         
         
     } boxContent[box].end();
@@ -584,6 +568,7 @@ void testApp::drawBox(int box){
     
     
     //camera.draw(0,0,1024,680);
+    
     
     
     ofPushMatrix();

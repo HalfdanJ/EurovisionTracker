@@ -12,6 +12,8 @@
 	<dict>
 		<key>0C3F43D8-4C72-42B7-ADEF-511B2938C65B</key>
 		<string>https://github.com/kylemcdonald/ofxCv.git</string>
+		<key>1E4A888B-C97D-4256-AE91-F3A71A0BF146</key>
+		<string>https://github.com/astellato/ofxSyphon.git</string>
 		<key>AC3C4D5B-E25D-46C7-B3E5-965FE101B3AE</key>
 		<string>https://github.com/HalfdanJ/EurovisionTracker.git</string>
 		<key>B8382CE3-FEC5-4F81-B381-21F50AD6C4DA</key>
@@ -23,6 +25,8 @@
 	<dict>
 		<key>0C3F43D8-4C72-42B7-ADEF-511B2938C65B</key>
 		<string>../../../../../addons/ofxCv</string>
+		<key>1E4A888B-C97D-4256-AE91-F3A71A0BF146</key>
+		<string>../../../../../addons/ofxSyphon</string>
 		<key>AC3C4D5B-E25D-46C7-B3E5-965FE101B3AE</key>
 		<string>../..</string>
 		<key>B8382CE3-FEC5-4F81-B381-21F50AD6C4DA</key>
@@ -51,6 +55,14 @@
 			<string>0C3F43D8-4C72-42B7-ADEF-511B2938C65B</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ofxCv</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1E4A888B-C97D-4256-AE91-F3A71A0BF146</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofxSyphon</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
