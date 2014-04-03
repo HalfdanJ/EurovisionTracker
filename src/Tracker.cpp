@@ -32,7 +32,10 @@ cv::SimpleBlobDetector::Params Tracker::getTrackerParams(){
     params.minThreshold = lowThreshold;
     params.maxThreshold = highThreshold;
     params.thresholdStep = thresholdStep;
-    params.minArea = 200;
+    params.minArea = blobMinSize;
+    params.maxArea = blobMaxSize;
+//    params.minCircularity = blobMinRoundiness;
+  //  params.maxCircularity = blobMaxRoundiness;
     params.filterByConvexity = false;
     params.filterByCircularity = false;
     return  params;
@@ -56,7 +59,6 @@ bool Tracker::update(cv::Mat img){
     
     roiRect = cv::Rect(0, 0, 1920, 1080);
     if(lastLocation.x != 0 && lastLocation.y != 0){
-        int roiSize = 400;
         roiRect = cv::Rect(
                            ofClamp(lastLocation.x-roiSize*0.5,0,1920-roiSize),
                            ofClamp(lastLocation.y-roiSize*0.5,0,1080-roiSize),

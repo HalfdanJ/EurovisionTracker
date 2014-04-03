@@ -13,6 +13,12 @@ public:
     int lowThreshold;
     int highThreshold;
     int thresholdStep;
+    float blobMinSize;
+    float blobMaxSize;
+    float blobMinRoundiness;
+    float blobMaxRoundiness;
+    int roiSize;
+
     
     cv::Rect roiRect;
     

@@ -10,11 +10,24 @@ void testApp::setup() {
     
     ofSetFrameRate(25);
     ofSetVerticalSync(true);
+    TIME_SAMPLE_SET_FRAMERATE(25.f);
+    TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_TOP_RIGHT );
+    
     
     //Settings
     settings.loadFile("settings.xml");
     threshold = settings.getValue("threshold", 100);
-    
+    OFX_REMOTEUI_SERVER_SETUP(10000); //start server
+    OFX_REMOTEUI_SERVER_SHARE_PARAM(debug,0,1);
+    OFX_REMOTEUI_SERVER_SHARE_PARAM(threshold,0,255);
+    OFX_REMOTEUI_SERVER_SHARE_PARAM(blobMinSize,0,6000);
+    OFX_REMOTEUI_SERVER_SHARE_PARAM(blobMaxSize,0,6000);
+    OFX_REMOTEUI_SERVER_SHARE_PARAM(roiSize,0,1000);
+    OFX_REMOTEUI_SERVER_SHARE_PARAM(numTrackers,0,3);
+    OFX_REMOTEUI_SERVER_LOAD_FROM_XML();
+
+
+
     //Allocation
     for(int i=0;i<3;i++){
         mask[i].allocate(1920, 1080);
@@ -95,6 +108,8 @@ void testApp::update() {
     bool update = true;
     
     updateSimulator();
+    
+    TIME_SAMPLE_SET_ENABLED(debug);
 
     
 #ifdef VIDEO
@@ -115,6 +130,7 @@ void testApp::update() {
 
 void testApp::updateSimulator(){
 #ifdef SIMULATOR
+    TIME_SAMPLE_START("Simulator");
 
     while(oscReceiver.hasWaitingMessages()){
         ofxOscMessage m;
@@ -174,6 +190,9 @@ void testApp::updateSimulator(){
     ofPixels pixels;
     simulatorFbo.readToPixels(pixels);
     img.setFromPixels(pixels);
+    
+    TIME_SAMPLE_STOP("Simulator");
+
 #endif
 
 }
@@ -182,13 +201,18 @@ void testApp::updateSimulator(){
 //---------------------------------------------------------------------------------------------------------
 
 void testApp::updateTracker(){
+    TIME_SAMPLE_START("ImagePreproc");
+
 #ifdef BLACKMAGIC
     cvBwImage = ofxCv::toCv(cam.getGrayPixels());
 #else
     cv::Mat cvImage = ofxCv::toCv(img);
     cv::cvtColor(cvImage, cvBwImage, CV_RGB2GRAY);
 #endif
+    TIME_SAMPLE_STOP("ImagePreproc");
     
+    TIME_SAMPLE_START("Tracker");
+
     dispatch_queue_t trackerQueue = dispatch_queue_create("com.halfdanj.tracker", 0);
     
     //Run a debug tracker (multithreaded with the other trackers)
@@ -196,6 +220,10 @@ void testApp::updateTracker(){
         dispatch_async(trackerQueue, ^{
             debugTracker.lowThreshold = threshold;
             debugTracker.highThreshold = threshold+10;
+            debugTracker.blobMaxSize  = blobMaxSize;
+            debugTracker.blobMinSize = blobMinSize;
+            debugTracker.roiSize = roiSize;
+
             blobs =debugTracker.debugTrack(cvBwImage);
         });
     }
@@ -204,13 +232,16 @@ void testApp::updateTracker(){
     bool trackerFound[3] = {false,false,false}, *trackerFoundPtr;
     trackerFoundPtr = trackerFound;
     
+    int num = MIN(numTrackers, trackers.size());
     
     //Run the exsisting trackers (multrithreaded)
-    for(int i=0;i<trackers.size();i++){
+    for(int i=0;i<num;i++){
+        trackers[i].lowThreshold = threshold;
+        trackers[i].highThreshold = threshold+10;
+        trackers[i].blobMaxSize  = blobMaxSize;
+        trackers[i].blobMinSize = blobMinSize;
+        trackers[i].roiSize = roiSize;
         dispatch_async(trackerQueue, ^{
-            trackers[i].lowThreshold = threshold;
-            trackers[i].highThreshold = threshold+10;
-            
             bool found = trackers[i].update(cvBwImage);
             if(found){
                 trackerFoundPtr[i] = true;
@@ -223,7 +254,7 @@ void testApp::updateTracker(){
     dispatch_sync(trackerQueue, ^{});
     
     //Look for trackers that are the same
-    for(int i=0;i<trackers.size();i++){
+    for(int i=0;i<num;i++){
         for(int u=i+1;u<trackers.size();u++){
             ofPoint roiTl1 = ofxCv::toOf(trackers[i].roiRect.tl());
             ofPoint p1 = ofxCv::toOf(trackers[i].imagePoints[0]) + roiTl1;
@@ -237,6 +268,10 @@ void testApp::updateTracker(){
         }
     }
     
+    for(int i=num;i<trackers.size();i++){
+        trackerFound[i] = false;
+    }
+    
     //Delete trackers that have disappeared
     for(int i=0;i<trackers.size();i++){
         if(!trackerFoundPtr[i]){
@@ -247,11 +282,12 @@ void testApp::updateTracker(){
         }
     }
     
-
+    TIME_SAMPLE_STOP("Tracker");
+    TIME_SAMPLE_START("NewTracker");
     
     
     //Add new trackers if there are missing some
-    if(trackers.size() < 3){
+    if(trackers.size() < numTrackers){
 
         //Draw a rectangle on top of all the other trackers so they dont get tracked
         for(int i=0;i<trackers.size();i++){
@@ -278,6 +314,13 @@ void testApp::updateTracker(){
         Tracker newTracker = unusedTrackers[unusedTrackers.size()-1];
         newTracker.lowThreshold = threshold;
         newTracker.highThreshold = threshold+10;
+        newTracker.blobMaxRoundiness = blobMaxRoundiness;
+        newTracker.blobMinRoundiness = blobMinRoundiness;
+        newTracker.blobMaxSize  = blobMaxSize;
+        newTracker.blobMinSize = blobMinSize;
+        newTracker.roiSize = roiSize;
+        
+        
         newTracker.lastLocation = cv::Point();
         bool found = newTracker.update(cvBwImage);
         if(found){
@@ -285,6 +328,7 @@ void testApp::updateTracker(){
             trackers.push_back(newTracker);
         }
     }
+    TIME_SAMPLE_STOP("NewTracker");
     
     
     

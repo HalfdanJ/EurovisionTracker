@@ -5,6 +5,8 @@
 #include "ofxOsc.h"
 #include "Tracker.h"
 #include "ofxXmlSettings.h"
+#include "ofxTimeMeasurements.h"
+#include "ofxRemoteUIServer.h"
 
 #include <dispatch/dispatch.h>
 
@@ -45,6 +47,14 @@ public:
     cv::Mat cvBwImage;
 
     int threshold;
+    float blobMinSize;
+    float blobMaxSize;
+    float blobMinRoundiness;
+    float blobMaxRoundiness;
+    int roiSize;
+    int numTrackers;
+    
+    
     bool setThreshold;
     
     ofFbo mask[3];

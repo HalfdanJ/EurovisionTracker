@@ -1,0 +1,5 @@
+Addons: 
+
+ofxBlackMagic
+ofxCv
+
