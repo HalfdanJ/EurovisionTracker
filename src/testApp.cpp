@@ -46,8 +46,8 @@ void testApp::setup() {
     
     //Syphon
     syphon.setup();
-//    syphon.set("Syphon","QLab");
-    syphon.set("Screen 1","Millumin");
+    syphon.set("Syphon","QLab");
+   // syphon.set("Screen 1","Millumin");
     
     //Scene setup
     ofSetSmoothLighting(true);
@@ -539,29 +539,29 @@ void testApp::drawBox(int box){
     
     glEnable(GL_BLEND);
     
-    composed[box].begin();
-    ofClear(0,0,0);
-    mask[box].getTextureReference().bind();
-    glBegin(GL_QUADS);
-    glTexCoord2d(0, 0); glVertex2d(0, 0);
-    glTexCoord2d(ofGetWidth(), 0); glVertex2d(ofGetWidth(), 0);
-    glTexCoord2d(ofGetWidth(), ofGetHeight()); glVertex2d(ofGetWidth(), ofGetHeight());
-    glTexCoord2d(0, ofGetHeight()); glVertex2d(0, ofGetHeight());
-    glEnd();
-    mask[box].getTextureReference().unbind();
-    
-    glBlendFunc(GL_DST_COLOR, GL_ZERO);
-    
-    boxContent[box].getTextureReference().bind();
-    glBegin(GL_QUADS);
-    glTexCoord2d(0, 0); glVertex2d(0, 0);
-    glTexCoord2d(ofGetWidth(), 0); glVertex2d(ofGetWidth(), 0);
-    glTexCoord2d(ofGetWidth(), ofGetHeight()); glVertex2d(ofGetWidth(), ofGetHeight());
-    glTexCoord2d(0, ofGetHeight()); glVertex2d(0, ofGetHeight());
-    glEnd();
-    boxContent[box].getTextureReference().unbind();
-    
-    composed[box].end();
+    composed[box].begin();{
+        ofClear(0,0,0);
+        mask[box].getTextureReference().bind();
+        glBegin(GL_QUADS);
+        glTexCoord2d(0, 0); glVertex2d(0, 0);
+        glTexCoord2d(ofGetWidth(), 0); glVertex2d(ofGetWidth(), 0);
+        glTexCoord2d(ofGetWidth(), ofGetHeight()); glVertex2d(ofGetWidth(), ofGetHeight());
+        glTexCoord2d(0, ofGetHeight()); glVertex2d(0, ofGetHeight());
+        glEnd();
+        mask[box].getTextureReference().unbind();
+        
+        glBlendFunc(GL_DST_COLOR, GL_ZERO);
+        
+        boxContent[box].getTextureReference().bind();
+        glBegin(GL_QUADS);
+        glTexCoord2d(0, 0); glVertex2d(0, 0);
+        glTexCoord2d(ofGetWidth(), 0); glVertex2d(ofGetWidth(), 0);
+        glTexCoord2d(ofGetWidth(), ofGetHeight()); glVertex2d(ofGetWidth(), ofGetHeight());
+        glTexCoord2d(0, ofGetHeight()); glVertex2d(0, ofGetHeight());
+        glEnd();
+        boxContent[box].getTextureReference().unbind();
+        
+    }composed[box].end();
     
     
     ofEnableAlphaBlending();
