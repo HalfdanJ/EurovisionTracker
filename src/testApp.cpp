@@ -15,8 +15,6 @@ void testApp::setup() {
     
     
     //Settings
-    settings.loadFile("settings.xml");
-    threshold = settings.getValue("threshold", 100);
     OFX_REMOTEUI_SERVER_SETUP(10000); //start server
     OFX_REMOTEUI_SERVER_SHARE_PARAM(debug,0,1);
     OFX_REMOTEUI_SERVER_SHARE_PARAM(threshold,0,255);
@@ -110,6 +108,17 @@ void testApp::setup() {
 
 
 void testApp::update() {
+    
+    while(oscReceiver.hasWaitingMessages()){
+        ofxOscMessage m;
+        oscReceiver.getNextMessage(&m);
+        
+        if(m.getAddress() == "/trackers/num"){
+            numTrackers = m.getArgAsInt32(0);
+        }
+    }
+    
+    
     bool update = true;
     
     updateSimulator();
@@ -137,21 +146,7 @@ void testApp::updateSimulator(){
 #ifdef SIMULATOR
     TIME_SAMPLE_START("Simulator");
 
-    while(oscReceiver.hasWaitingMessages()){
-        ofxOscMessage m;
-        oscReceiver.getNextMessage(&m);
-        
-        if(m.getAddress() == "/position/x"){
-            for(int i=0;i<3;i++){
-                simulatorPos[i].x = m.getArgAsFloat(i)*1920;
-            }
-        }
-        if(m.getAddress() == "/position/y"){
-            for(int i=0;i<3;i++){
-                simulatorPos[i].y = m.getArgAsFloat(i)*1080;
-            }
-        }
-    }
+
     
     //Draw the simulator fbo image
     simulatorFbo.begin();{
@@ -336,6 +331,13 @@ void testApp::updateTracker(){
     TIME_SAMPLE_STOP("NewTracker");
     
     
+    //Sort the trackers after x position
+    std::sort(trackers.begin(), trackers.end());
+    
+    
+    
+    
+    
     
 }
 //---------------------------------------------------------------------------------------------------------
@@ -399,7 +401,13 @@ void testApp::draw() {
             ofRect(trackers[u].roiRect.x/1920., trackers[u].roiRect.y/1080.,
                    trackers[u].roiRect.width/1920., trackers[u].roiRect.height/1080.);
             ofFill();
+         
+            ofScale(1.0/ofGetWidth(), 1.0/ofGetHeight());
+            ofSetColor(255,255,0);
+            ofDrawBitmapString(ofToString(u), trackers[u].roiRect.x+10,trackers[u].roiRect.y+20);
             ofPopMatrix();
+            
+
         }
         
         int s = blobs.size();
@@ -411,6 +419,7 @@ void testApp::draw() {
             ofCircle(X, Y, 0.003);
         }
         ofPopMatrix();
+    
     }
     
     
@@ -611,7 +620,5 @@ void testApp::mouseMoved(int x, int y){
 void testApp::mouseDragged(int x, int y, int button){
     if(setThreshold){
         threshold = x-lastMouse.x;
-        settings.setValue("threshold", threshold);
-        settings.save("settings.xml");
     }
 }
