@@ -241,12 +241,13 @@ void testApp::updateTracker(){
         trackers[i].blobMaxSize  = blobMaxSize;
         trackers[i].blobMinSize = blobMinSize;
         trackers[i].roiSize = roiSize;
-        dispatch_async(trackerQueue, ^{
+        
+        //dispatch_async(trackerQueue, ^{
             bool found = trackers[i].update(cvBwImage);
             if(found){
                 trackerFoundPtr[i] = true;
             }
-        });
+        //});
         
     }
     

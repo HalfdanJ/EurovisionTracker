@@ -10,8 +10,8 @@
 #include "ofxSyphon.h"
 #include <dispatch/dispatch.h>
 
-#define SIMULATOR 1
-//#define BLACKMAGIC 1
+//#define SIMULATOR 1
+#define BLACKMAGIC 1
 //#define VIDEO 1
 
 #ifdef BLACKMAGIC
