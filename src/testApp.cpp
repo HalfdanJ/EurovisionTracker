@@ -527,7 +527,18 @@ void testApp::drawBox(int box){
                 ofFill();
                 ofSetColor(255,255,255);
                 ofTranslate(0, 0,-25);
-                syphon.draw(-25, -25, 50,50);
+	       // syphon.draw(-25, -25, 50,50);
+		syphon.bind();
+
+		float w = syphon.getWidth()/3.0;
+		glBegin(GL_QUADS);
+		glTexCoord2d(w*box, 0); glVertex2d(-25, -25);
+		glTexCoord2d(w*box+w, 0); glVertex2d(25, -25);
+		glTexCoord2d(w*box+w, syphon.getHeight()); glVertex2d(25, 25);
+		glTexCoord2d(w*box, syphon.getHeight()); glVertex2d(-25, 25);
+		glEnd();
+
+		syphon.unbind();
                 
             }ofPopMatrix();
             
