@@ -42,11 +42,11 @@
 		DD526B1718E968F700F13C88 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD526B1318E968F700F13C88 /* tinyxmlerror.cpp */; };
 		DD526B1818E968F700F13C88 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD526B1418E968F700F13C88 /* tinyxmlparser.cpp */; };
 		DD7C733818D9F960009FB83F /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD7C733618D9F960009FB83F /* Tracker.cpp */; };
-		DDCBCF3F18ED78C000B916C6 /* ofxTimeMeasurements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDCBCF3018ED76CD00B916C6 /* ofxTimeMeasurements.cpp */; };
-		DDCBCF4018ED79D600B916C6 /* ofxRemoteUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDCBCF3418ED76DD00B916C6 /* ofxRemoteUI.cpp */; };
-		DDCBCF4118ED79DA00B916C6 /* ofxRemoteUIClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDCBCF3618ED76DD00B916C6 /* ofxRemoteUIClient.cpp */; };
-		DDCBCF4218ED79DC00B916C6 /* ofxRemoteUINeigbors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDCBCF3818ED76DD00B916C6 /* ofxRemoteUINeigbors.cpp */; };
-		DDCBCF4318ED79E000B916C6 /* ofxRemoteUIServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDCBCF3A18ED76DD00B916C6 /* ofxRemoteUIServer.cpp */; };
+		DDAE797318F57BDA00535E77 /* ofxTimeMeasurements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDAE797118F57BDA00535E77 /* ofxTimeMeasurements.cpp */; };
+		DDAE798218F57BE100535E77 /* ofxRemoteUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDAE797718F57BE100535E77 /* ofxRemoteUI.cpp */; };
+		DDAE798318F57BE100535E77 /* ofxRemoteUIClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDAE797918F57BE100535E77 /* ofxRemoteUIClient.cpp */; };
+		DDAE798418F57BE100535E77 /* ofxRemoteUINeigbors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDAE797B18F57BE100535E77 /* ofxRemoteUINeigbors.cpp */; };
+		DDAE798518F57BE100535E77 /* ofxRemoteUIServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDAE797D18F57BE100535E77 /* ofxRemoteUIServer.cpp */; };
 		DDCBCF5618ED980000B916C6 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDCBCF4A18ED980000B916C6 /* Syphon.framework */; };
 		DDCBCF5718ED980000B916C6 /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCBCF4D18ED980000B916C6 /* SyphonNameboundClient.m */; };
 		DDCBCF5818ED980000B916C6 /* ofxSyphonClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = DDCBCF5118ED980000B916C6 /* ofxSyphonClient.mm */; };
@@ -262,21 +262,21 @@
 		DD526B1418E968F700F13C88 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		DD7C733618D9F960009FB83F /* Tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tracker.cpp; sourceTree = "<group>"; };
 		DD7C733718D9F960009FB83F /* Tracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tracker.h; sourceTree = "<group>"; };
+		DDAE797118F57BDA00535E77 /* ofxTimeMeasurements.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTimeMeasurements.cpp; sourceTree = "<group>"; };
+		DDAE797218F57BDA00535E77 /* ofxTimeMeasurements.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTimeMeasurements.h; sourceTree = "<group>"; };
+		DDAE797618F57BE100535E77 /* dirent_vs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dirent_vs.h; sourceTree = "<group>"; };
+		DDAE797718F57BE100535E77 /* ofxRemoteUI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRemoteUI.cpp; sourceTree = "<group>"; };
+		DDAE797818F57BE100535E77 /* ofxRemoteUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUI.h; sourceTree = "<group>"; };
+		DDAE797918F57BE100535E77 /* ofxRemoteUIClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRemoteUIClient.cpp; sourceTree = "<group>"; };
+		DDAE797A18F57BE100535E77 /* ofxRemoteUIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUIClient.h; sourceTree = "<group>"; };
+		DDAE797B18F57BE100535E77 /* ofxRemoteUINeigbors.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRemoteUINeigbors.cpp; sourceTree = "<group>"; };
+		DDAE797C18F57BE100535E77 /* ofxRemoteUINeigbors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUINeigbors.h; sourceTree = "<group>"; };
+		DDAE797D18F57BE100535E77 /* ofxRemoteUIServer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRemoteUIServer.cpp; sourceTree = "<group>"; };
+		DDAE797E18F57BE100535E77 /* ofxRemoteUIServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUIServer.h; sourceTree = "<group>"; };
+		DDAE797F18F57BE100535E77 /* ofxRemoteUISimpleNotifications.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUISimpleNotifications.h; sourceTree = "<group>"; };
+		DDAE798018F57BE100535E77 /* RemoteParam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteParam.h; sourceTree = "<group>"; };
+		DDAE798118F57BE100535E77 /* uriencode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = uriencode.h; sourceTree = "<group>"; };
 		DDCBCF2C18ED767400B916C6 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.md; sourceTree = "<group>"; };
-		DDCBCF3018ED76CD00B916C6 /* ofxTimeMeasurements.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTimeMeasurements.cpp; sourceTree = "<group>"; };
-		DDCBCF3118ED76CD00B916C6 /* ofxTimeMeasurements.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTimeMeasurements.h; sourceTree = "<group>"; };
-		DDCBCF3318ED76DD00B916C6 /* dirent_vs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dirent_vs.h; sourceTree = "<group>"; };
-		DDCBCF3418ED76DD00B916C6 /* ofxRemoteUI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRemoteUI.cpp; sourceTree = "<group>"; };
-		DDCBCF3518ED76DD00B916C6 /* ofxRemoteUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUI.h; sourceTree = "<group>"; };
-		DDCBCF3618ED76DD00B916C6 /* ofxRemoteUIClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRemoteUIClient.cpp; sourceTree = "<group>"; };
-		DDCBCF3718ED76DD00B916C6 /* ofxRemoteUIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUIClient.h; sourceTree = "<group>"; };
-		DDCBCF3818ED76DD00B916C6 /* ofxRemoteUINeigbors.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRemoteUINeigbors.cpp; sourceTree = "<group>"; };
-		DDCBCF3918ED76DD00B916C6 /* ofxRemoteUINeigbors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUINeigbors.h; sourceTree = "<group>"; };
-		DDCBCF3A18ED76DD00B916C6 /* ofxRemoteUIServer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRemoteUIServer.cpp; sourceTree = "<group>"; };
-		DDCBCF3B18ED76DD00B916C6 /* ofxRemoteUIServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUIServer.h; sourceTree = "<group>"; };
-		DDCBCF3C18ED76DD00B916C6 /* ofxRemoteUISimpleNotifications.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxRemoteUISimpleNotifications.h; sourceTree = "<group>"; };
-		DDCBCF3D18ED76DD00B916C6 /* RemoteParam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteParam.h; sourceTree = "<group>"; };
-		DDCBCF3E18ED76DD00B916C6 /* uriencode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = uriencode.h; sourceTree = "<group>"; };
 		DDCBCF4A18ED980000B916C6 /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
 		DDCBCF4C18ED980000B916C6 /* SyphonNameboundClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonNameboundClient.h; sourceTree = "<group>"; };
 		DDCBCF4D18ED980000B916C6 /* SyphonNameboundClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonNameboundClient.m; sourceTree = "<group>"; };
@@ -720,9 +720,9 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				DDAE797418F57BE100535E77 /* ofxRemoteUI */,
+				DDAE796F18F57BDA00535E77 /* ofxTimeMeasurements */,
 				DDCBCF4518ED97EE00B916C6 /* ofxSyphon */,
-				DDCBCF2E18ED76BF00B916C6 /* ofxTimeMeasurements */,
-				DDCBCF2D18ED76AE00B916C6 /* ofxRemoteUI */,
 				EFDE5D8518E98F2C00BCEB9D /* ofxBlackMagic */,
 				DD526B0C18E968F700F13C88 /* ofxXmlSettings */,
 				A0B90D3B0ADB9C1716816714 /* ofxOpenCv */,
@@ -889,50 +889,50 @@
 			path = ../../../addons/ofxXmlSettings/libs;
 			sourceTree = "<group>";
 		};
-		DDCBCF2D18ED76AE00B916C6 /* ofxRemoteUI */ = {
+		DDAE796F18F57BDA00535E77 /* ofxTimeMeasurements */ = {
 			isa = PBXGroup;
 			children = (
-				DDCBCF3218ED76DD00B916C6 /* src */,
-			);
-			name = ofxRemoteUI;
-			sourceTree = "<group>";
-		};
-		DDCBCF2E18ED76BF00B916C6 /* ofxTimeMeasurements */ = {
-			isa = PBXGroup;
-			children = (
-				DDCBCF2F18ED76CD00B916C6 /* src */,
+				DDAE797018F57BDA00535E77 /* src */,
 			);
 			name = ofxTimeMeasurements;
 			sourceTree = "<group>";
 		};
-		DDCBCF2F18ED76CD00B916C6 /* src */ = {
+		DDAE797018F57BDA00535E77 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				DDCBCF3018ED76CD00B916C6 /* ofxTimeMeasurements.cpp */,
-				DDCBCF3118ED76CD00B916C6 /* ofxTimeMeasurements.h */,
+				DDAE797118F57BDA00535E77 /* ofxTimeMeasurements.cpp */,
+				DDAE797218F57BDA00535E77 /* ofxTimeMeasurements.h */,
 			);
 			name = src;
-			path = ../../../examples/addons/ofxTimeMeasurements/src;
+			path = ../../../addons/ofxTimeMeasurements/src;
 			sourceTree = "<group>";
 		};
-		DDCBCF3218ED76DD00B916C6 /* src */ = {
+		DDAE797418F57BE100535E77 /* ofxRemoteUI */ = {
 			isa = PBXGroup;
 			children = (
-				DDCBCF3318ED76DD00B916C6 /* dirent_vs.h */,
-				DDCBCF3418ED76DD00B916C6 /* ofxRemoteUI.cpp */,
-				DDCBCF3518ED76DD00B916C6 /* ofxRemoteUI.h */,
-				DDCBCF3618ED76DD00B916C6 /* ofxRemoteUIClient.cpp */,
-				DDCBCF3718ED76DD00B916C6 /* ofxRemoteUIClient.h */,
-				DDCBCF3818ED76DD00B916C6 /* ofxRemoteUINeigbors.cpp */,
-				DDCBCF3918ED76DD00B916C6 /* ofxRemoteUINeigbors.h */,
-				DDCBCF3A18ED76DD00B916C6 /* ofxRemoteUIServer.cpp */,
-				DDCBCF3B18ED76DD00B916C6 /* ofxRemoteUIServer.h */,
-				DDCBCF3C18ED76DD00B916C6 /* ofxRemoteUISimpleNotifications.h */,
-				DDCBCF3D18ED76DD00B916C6 /* RemoteParam.h */,
-				DDCBCF3E18ED76DD00B916C6 /* uriencode.h */,
+				DDAE797518F57BE100535E77 /* src */,
+			);
+			name = ofxRemoteUI;
+			sourceTree = "<group>";
+		};
+		DDAE797518F57BE100535E77 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				DDAE797618F57BE100535E77 /* dirent_vs.h */,
+				DDAE797718F57BE100535E77 /* ofxRemoteUI.cpp */,
+				DDAE797818F57BE100535E77 /* ofxRemoteUI.h */,
+				DDAE797918F57BE100535E77 /* ofxRemoteUIClient.cpp */,
+				DDAE797A18F57BE100535E77 /* ofxRemoteUIClient.h */,
+				DDAE797B18F57BE100535E77 /* ofxRemoteUINeigbors.cpp */,
+				DDAE797C18F57BE100535E77 /* ofxRemoteUINeigbors.h */,
+				DDAE797D18F57BE100535E77 /* ofxRemoteUIServer.cpp */,
+				DDAE797E18F57BE100535E77 /* ofxRemoteUIServer.h */,
+				DDAE797F18F57BE100535E77 /* ofxRemoteUISimpleNotifications.h */,
+				DDAE798018F57BE100535E77 /* RemoteParam.h */,
+				DDAE798118F57BE100535E77 /* uriencode.h */,
 			);
 			name = src;
-			path = ../../../examples/addons/ofxRemoteUI/src;
+			path = ../../../addons/ofxRemoteUI/src;
 			sourceTree = "<group>";
 		};
 		DDCBCF4518ED97EE00B916C6 /* ofxSyphon */ = {
@@ -1257,10 +1257,9 @@
 				1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */,
 				169D3C72FDE6C5590A1616F5 /* ofxCvFloatImage.cpp in Sources */,
 				FB09C6B2A1DA0EA217240CB8 /* ofxCvGrayscaleImage.cpp in Sources */,
-				DDCBCF3F18ED78C000B916C6 /* ofxTimeMeasurements.cpp in Sources */,
 				DDCBCF5818ED980000B916C6 /* ofxSyphonClient.mm in Sources */,
-				DDCBCF4218ED79DC00B916C6 /* ofxRemoteUINeigbors.cpp in Sources */,
 				DDCBCF5718ED980000B916C6 /* SyphonNameboundClient.m in Sources */,
+				DDAE798218F57BE100535E77 /* ofxRemoteUI.cpp in Sources */,
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,
 				63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */,
 				D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */,
@@ -1269,8 +1268,9 @@
 				DD526B1718E968F700F13C88 /* tinyxmlerror.cpp in Sources */,
 				4ADB88E2FB52E76A471065DE /* ofxOscParameterSync.cpp in Sources */,
 				DD526B1518E968F700F13C88 /* ofxXmlSettings.cpp in Sources */,
+				DDAE797318F57BDA00535E77 /* ofxTimeMeasurements.cpp in Sources */,
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
-				DDCBCF4118ED79DA00B916C6 /* ofxRemoteUIClient.cpp in Sources */,
+				DDAE798418F57BE100535E77 /* ofxRemoteUINeigbors.cpp in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
 				EFDE5D9B18E9905C00BCEB9D /* DeckLinkController.cpp in Sources */,
@@ -1279,9 +1279,7 @@
 				510CAFE035E576A4E1502D52 /* UdpSocket.cpp in Sources */,
 				A29D8C96AE042ECEAA1BD4F3 /* NetworkingUtilsWin.cpp in Sources */,
 				28090DEB5109115003E8F1C5 /* UdpSocketWin.cpp in Sources */,
-				DDCBCF4018ED79D600B916C6 /* ofxRemoteUI.cpp in Sources */,
 				62545D179C94265CA1389D4A /* OscOutboundPacketStream.cpp in Sources */,
-				DDCBCF4318ED79E000B916C6 /* ofxRemoteUIServer.cpp in Sources */,
 				C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */,
 				0546D1A38E13BD319CC9755B /* OscReceivedElements.cpp in Sources */,
 				879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */,
@@ -1294,6 +1292,8 @@
 				45CC483A999BF1065A6B926C /* Distance.cpp in Sources */,
 				5CC34D433F5806179935B89D /* Flow.cpp in Sources */,
 				2023EF517ED2D8B397511D4B /* Helpers.cpp in Sources */,
+				DDAE798518F57BE100535E77 /* ofxRemoteUIServer.cpp in Sources */,
+				DDAE798318F57BE100535E77 /* ofxRemoteUIClient.cpp in Sources */,
 				DDCBCF5A18ED980000B916C6 /* ofxSyphonServerDirectory.mm in Sources */,
 				C602002DE761F9B52DB4400A /* ObjectFinder.cpp in Sources */,
 				7CDAD32BE4FA46701E3552C7 /* RunningBackground.cpp in Sources */,
