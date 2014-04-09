@@ -38,4 +38,10 @@ public:
 	vector<cv::Point3f> objectPoints;
 
 
+    bool operator < (const Tracker& otherTracker) const
+    {
+        return (lastLocation.x < otherTracker.lastLocation.x);
+    }
 };
+
+
