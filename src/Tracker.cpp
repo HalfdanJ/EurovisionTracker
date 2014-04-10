@@ -14,7 +14,7 @@ Tracker::Tracker(){
     thresholdStep = 9;
     
     
-	load("simulator.yml");
+	load("calibration.yml");
     setPatternSize(4, 11);
     setPatternType(ofxCv::ASYMMETRIC_CIRCLES_GRID);
     setSquareSize(20);

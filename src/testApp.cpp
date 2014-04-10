@@ -44,15 +44,15 @@ void testApp::setup() {
     
     //Syphon
     syphon.setup();
-    syphon.set("Syphon","QLab");
-   // syphon.set("Screen 1","Millumin");
+    //syphon.set("Syphon","QLab");
+    syphon.set("Screen 1","Millumin");
     
     //Scene setup
     ofSetSmoothLighting(true);
     
     pointLight.setDiffuseColor( ofFloatColor(.85, .85, .85) );
 //    pointLight.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
-    pointLight.setPosition(1000, -1000, 5000);
+    pointLight.setPosition(1000, -1000, 4000);
 
     
   /*  pointLight2.setDiffuseColor( ofFloatColor( 238.f/255.f, 57.f/255.f, 135.f/255.f ));
@@ -355,7 +355,7 @@ void testApp::draw() {
     }
     else {
 #ifdef BLACKMAGIC
-        cam.getGrayTexture().draw(0, 0, ofGetWidth(), ofGetHeight());
+        cam.getColorTexture().draw(0, 0, ofGetWidth(), ofGetHeight());
 #else
         img.draw(0, 0, ofGetWidth(), ofGetHeight());
 #endif
@@ -501,7 +501,7 @@ void testApp::drawBox(int box){
             
             
             ofFill();
-            ofSetColor(150,150,150,255);
+            ofSetColor(255,186,141,255);
             
             //backwall
             ofRect(-25, -25, -50, 50, 50);
@@ -529,6 +529,9 @@ void testApp::drawBox(int box){
                 ofSetColor(255,255,255);
                 ofTranslate(0, 0,-25);
 	       // syphon.draw(-25, -25, 50,50);
+        /*
+         FEATURE: Adding Syphon-input to the box
+         */
 		syphon.bind();
 
 		float w = syphon.getWidth()/3.0;
