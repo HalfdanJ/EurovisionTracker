@@ -44,8 +44,8 @@ void testApp::setup() {
     
     //Syphon
     syphon.setup();
-    //syphon.set("Syphon","QLab");
-    syphon.set("Screen 1","Millumin");
+    syphon.set("Syphon","QLab");
+    //syphon.set("Screen 1","Millumin");
     
     //Scene setup
     ofSetSmoothLighting(true);
@@ -100,6 +100,13 @@ void testApp::setup() {
     img.play();
 #endif
     
+    ofSetWindowPosition(-1900, 0);
+    ofToggleFullscreen();
+    
+    
+    textureBack.loadImage("Box_Back.png");
+    textureSide.loadImage("Box_Side.png");
+    textureTop.loadImage("Box_Top.png");
     
 }
 
@@ -425,9 +432,10 @@ void testApp::draw() {
     
     
     ofSetColor(255,255,255);
-    
-    ofDrawBitmapString(ofToString(ofGetFrameRate())+" "+ofToString(ofGetWidth())+"x"+ofToString(ofGetHeight()), ofPoint(10,20));
-    
+
+    if(debug){
+        ofDrawBitmapString(ofToString(ofGetFrameRate())+" "+ofToString(ofGetWidth())+"x"+ofToString(ofGetHeight()), ofPoint(10,20));
+    }
     for(int i=0;i<trackers.size();i++){
         drawBox(i);
     }
@@ -436,7 +444,7 @@ void testApp::draw() {
 
 void testApp::drawBox(int box){
     
-    float scale = 0.3;
+    float scale = 0.35;
     float patternAspect = 1.3;
     
     //First create the mask of the box
@@ -476,8 +484,8 @@ void testApp::drawBox(int box){
         
         ofEnableDepthTest();
         
-        ofEnableLighting();
-        pointLight.enable();
+     //   ofEnableLighting();
+      //  pointLight.enable();
 /*        pointLight2.enable();
         pointLight3.enable();*/
         
@@ -501,25 +509,25 @@ void testApp::drawBox(int box){
             
             
             ofFill();
-            ofSetColor(255,186,141,255);
+            ofSetColor(255,255,255,255);
             
             //backwall
-            ofRect(-25, -25, -50, 50, 50);
+            textureBack.draw(-25, -25, -50, 50, 50);
             
             
             //top/bottom wall
             ofPushMatrix();{
                 ofRotate(90, 0, 1, 0);
-                ofRect(-0, -25, -25, 50, 50);
-                ofRect(-0, -25, 25, 50, 50);
+                textureTop.draw(-0, -25, -25, 50, 50);
+                textureTop.draw(-0, -25, 25, 50, 50);
             } ofPopMatrix();
            
             //Sides wall
             ofPushMatrix();{
                 ofRotate(90, 0, 1, 0);
                 ofRotate(90, 1, 0, 0);
-                ofRect(-0, -25, -25, 50, 50);
-                ofRect(-0, -25, 25, 50, 50);
+                textureSide.draw(-0, -25, -25, 50, 50);
+                textureSide.draw(-0, -25, 25, 50, 50);
             }ofPopMatrix();
             
             
@@ -536,17 +544,17 @@ void testApp::drawBox(int box){
 
 		float w = syphon.getWidth()/3.0;
 		glBegin(GL_QUADS);
-		glTexCoord2d(w*box, 0); glVertex2d(-25, -25);
-		glTexCoord2d(w*box+w, 0); glVertex2d(25, -25);
-		glTexCoord2d(w*box+w, syphon.getHeight()); glVertex2d(25, 25);
-		glTexCoord2d(w*box, syphon.getHeight()); glVertex2d(-25, 25);
+		glTexCoord2d(w*box+w, 0); glVertex2d(-25, -25);
+		glTexCoord2d(w*box, 0); glVertex2d(25, -25);
+		glTexCoord2d(w*box, syphon.getHeight()); glVertex2d(25, 25);
+		glTexCoord2d(w*box+w, syphon.getHeight()); glVertex2d(-25, 25);
 		glEnd();
 
 		syphon.unbind();
                 
             }ofPopMatrix();
             
-            ofDisableLighting();
+         //   ofDisableLighting();
             ofDisableDepthTest();
             
         } ofPopMatrix();

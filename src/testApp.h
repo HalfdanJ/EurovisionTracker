@@ -62,6 +62,10 @@ public:
     ofFbo boxContent[3];
     ofFbo composed[3];
     
+    ofImage textureBack;
+    ofImage textureSide;
+    ofImage textureTop;
+    
     ofLight pointLight, pointLight2, pointLight3;
     
     ofMaterial material;
