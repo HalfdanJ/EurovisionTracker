@@ -12,6 +12,7 @@
 
 //#define SIMULATOR 1
 #define BLACKMAGIC 1
+//#define SYPHON 1
 //#define VIDEO 1
 
 #ifdef BLACKMAGIC
@@ -41,6 +42,8 @@ public:
     ofxXmlSettings settings;
     ofxOscReceiver oscReceiver;
     ofxSyphonClient syphon;
+    ofxSyphonClient syphonCam;
+    ofxSyphonServer syphonOut;
     
     vector<Tracker> trackers;
     vector<Tracker> unusedTrackers;
@@ -61,10 +64,12 @@ public:
     ofFbo mask[3];
     ofFbo boxContent[3];
     ofFbo composed[3];
+    ofFbo output;
     
     ofImage textureBack;
     ofImage textureSide;
     ofImage textureTop;
+    ofImage textureGradient;
     
     ofLight pointLight, pointLight2, pointLight3;
     
@@ -76,11 +81,14 @@ public:
     Tracker debugTracker;
     vector<cv::KeyPoint> blobs;
     
+    ofImage img;
+    
+    float scale;
+
 
 #ifdef SIMULATOR
     ofFbo simulatorFbo;
     ofVec3f simulatorPos[3];
-    ofImage img;
 #endif
     
 #ifdef VIDEO

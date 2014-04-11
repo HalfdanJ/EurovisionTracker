@@ -9,7 +9,7 @@ void testApp::setup() {
     oscReceiver.setup(8080);
     
     ofSetFrameRate(25);
-    ofSetVerticalSync(true);
+    //ofSetVerticalSync(true);
     TIME_SAMPLE_SET_FRAMERATE(25.f);
     TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_TOP_RIGHT );
     
@@ -22,6 +22,7 @@ void testApp::setup() {
     OFX_REMOTEUI_SERVER_SHARE_PARAM(blobMaxSize,0,6000);
     OFX_REMOTEUI_SERVER_SHARE_PARAM(roiSize,0,1000);
     OFX_REMOTEUI_SERVER_SHARE_PARAM(numTrackers,0,3);
+    OFX_REMOTEUI_SERVER_SHARE_PARAM(scale,0.1,0.5);
     OFX_REMOTEUI_SERVER_LOAD_FROM_XML();
 
 
@@ -32,6 +33,7 @@ void testApp::setup() {
         boxContent[i].allocate(1920, 1080);
         composed[i].allocate(1920, 1080);
     }
+    output.allocate(1920, 1080);
     
     //Tracker setup, creates 3 trackers for reuse, since they are expensive to create
     for(int i=0;i<3;i++){
@@ -45,6 +47,8 @@ void testApp::setup() {
     //Syphon
     syphon.setup();
     syphon.set("Syphon","QLab");
+    
+    syphonOut.setName("eurovision");
     //syphon.set("Screen 1","Millumin");
     
     //Scene setup
@@ -68,6 +72,13 @@ void testApp::setup() {
     material.setAmbientColor(ofFloatColor(0.2,0.2,0.2));
     
     
+    
+#ifdef SYPHON
+    syphonCam.setup();
+    syphonCam.set("Screen 1","Millumin");
+    img.allocate(1920, 1080, OF_IMAGE_COLOR);
+
+#endif
     
     
 #ifdef SIMULATOR
@@ -100,13 +111,14 @@ void testApp::setup() {
     img.play();
 #endif
     
-    ofSetWindowPosition(-1900, 0);
+  //  ofSetWindowPosition(-1900, 0);
     ofToggleFullscreen();
     
     
     textureBack.loadImage("Box_Back.png");
     textureSide.loadImage("Box_Side.png");
-    textureTop.loadImage("Box_Top.png");
+    textureTop.loadImage("Box_Side.png");
+    textureGradient.loadImage("Tex_Grad.png");
     
 }
 
@@ -212,6 +224,10 @@ void testApp::updateTracker(){
 
 #ifdef BLACKMAGIC
     cvBwImage = ofxCv::toCv(cam.getGrayPixels());
+#elif SYPHON
+    ofPixels pixels;
+    syphonCam.mTex.readToPixels(pixels);
+    img.setFromPixels(pixels);
 #else
     cv::Mat cvImage = ofxCv::toCv(img);
     cv::cvtColor(cvImage, cvBwImage, CV_RGB2GRAY);
@@ -351,6 +367,8 @@ void testApp::updateTracker(){
 //---------------------------------------------------------------------------------------------------------
 
 void testApp::draw() {
+    output.begin();
+    ofClear(0, 0, 0);
     ofSetColor(255,255,255);
 
     if(setThreshold){
@@ -364,7 +382,7 @@ void testApp::draw() {
 #ifdef BLACKMAGIC
         cam.getColorTexture().draw(0, 0, ofGetWidth(), ofGetHeight());
 #else
-        img.draw(0, 0, ofGetWidth(), ofGetHeight());
+      //  img.draw(0, 0, ofGetWidth(), ofGetHeight());
 #endif
     }
 
@@ -433,18 +451,23 @@ void testApp::draw() {
     
     ofSetColor(255,255,255);
 
-    if(debug){
+  //  if(debug){
         ofDrawBitmapString(ofToString(ofGetFrameRate())+" "+ofToString(ofGetWidth())+"x"+ofToString(ofGetHeight()), ofPoint(10,20));
-    }
+   // }
+    
+
     for(int i=0;i<trackers.size();i++){
         drawBox(i);
     }
+    output.end();
+    
+    syphonOut.publishTexture(&output.getTextureReference());
+    output.draw(0,0);
 }
 //---------------------------------------------------------------------------------------------------------
 
 void testApp::drawBox(int box){
     
-    float scale = 0.35;
     float patternAspect = 1.3;
     
     //First create the mask of the box
@@ -530,6 +553,14 @@ void testApp::drawBox(int box){
                 textureSide.draw(-0, -25, 25, 50, 50);
             }ofPopMatrix();
             
+      //      textureGradient.draw(-25, -25, 0, 50, 2);
+    //        textureGradient.draw(-25, 25, 0, 50, -2);
+            ofPushMatrix();{
+                ofRotate(90, 0, 0, 1);
+//                textureGradient.draw(-25, -25, 0, 50, 2);
+  //              textureGradient.draw(-25, 25, 0, 50, -2);
+                
+            } ofPopMatrix();
             
             ofPushMatrix();{
                 //img.draw(-15,-2, 30, 30);
@@ -609,6 +640,7 @@ void testApp::drawBox(int box){
     
     composed[box].draw(0, 0);
     ofPopMatrix();
+    
     
 }
 //---------------------------------------------------------------------------------------------------------
