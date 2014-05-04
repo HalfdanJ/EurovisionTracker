@@ -11,9 +11,9 @@
 #include <dispatch/dispatch.h>
 
 //#define SIMULATOR 1
-#define BLACKMAGIC 1
+//#define BLACKMAGIC 1
 //#define SYPHON 1
-//#define VIDEO 1
+#define VIDEO 1
 
 #ifdef BLACKMAGIC
 #include "ofxBlackMagic.h"
@@ -29,7 +29,7 @@ public:
     void updateSimulator();
 
 	void draw();
-    void drawBox(int box);
+    void drawBox(int box, int mode);
     
     
     void keyPressed(int key);
@@ -70,6 +70,7 @@ public:
     ofImage textureSide;
     ofImage textureTop;
     ofImage textureGradient;
+    ofImage textureFront[3];
     
     ofLight pointLight, pointLight2, pointLight3;
     
@@ -81,14 +82,16 @@ public:
     Tracker debugTracker;
     vector<cv::KeyPoint> blobs;
     
-    ofImage img;
     
     float scale;
-
+    
+    ofVideoPlayer content;
 
 #ifdef SIMULATOR
     ofFbo simulatorFbo;
     ofVec3f simulatorPos[3];
+    ofImage img;
+
 #endif
     
 #ifdef VIDEO

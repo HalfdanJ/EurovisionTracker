@@ -15,14 +15,12 @@ Tracker::Tracker(){
     thresholdStep = 9;
     
     
-	load("calibration.yml");
+	load("calibration_1.yml");
     setPatternSize(4, 11);
     setPatternType(ofxCv::ASYMMETRIC_CIRCLES_GRID);
     setSquareSize(20);
     
     patternSize = getPatternSize();
-
-
 }
 
 
@@ -38,7 +36,9 @@ cv::SimpleBlobDetector::Params Tracker::getTrackerParams(){
 //    params.minCircularity = blobMinRoundiness;
   //  params.maxCircularity = blobMaxRoundiness;
     params.filterByConvexity = false;
-    params.filterByCircularity = false;
+    params.filterByCircularity = true;
+    params.minCircularity = 0.6;
+    params.filterByColor = true;
     return  params;
 }
 

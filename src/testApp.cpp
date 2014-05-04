@@ -8,7 +8,7 @@ void testApp::setup() {
     
     oscReceiver.setup(8080);
     
-    ofSetFrameRate(25);
+    //ofSetFrameRate(50);
     //ofSetVerticalSync(true);
     TIME_SAMPLE_SET_FRAMERATE(25.f);
     TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_TOP_RIGHT );
@@ -18,7 +18,7 @@ void testApp::setup() {
     OFX_REMOTEUI_SERVER_SETUP(10000); //start server
     OFX_REMOTEUI_SERVER_SHARE_PARAM(debug,0,1);
     OFX_REMOTEUI_SERVER_SHARE_PARAM(threshold,0,255);
-    OFX_REMOTEUI_SERVER_SHARE_PARAM(blobMinSize,0,6000);
+    OFX_REMOTEUI_SERVER_SHARE_PARAM(blobMinSize,10,600);
     OFX_REMOTEUI_SERVER_SHARE_PARAM(blobMaxSize,0,6000);
     OFX_REMOTEUI_SERVER_SHARE_PARAM(roiSize,0,1000);
     OFX_REMOTEUI_SERVER_SHARE_PARAM(numTrackers,0,3);
@@ -71,8 +71,14 @@ void testApp::setup() {
 	material.setSpecularColor(ofColor(255, 255, 255, 255));
     material.setAmbientColor(ofFloatColor(0.2,0.2,0.2));
     
+    content.setPixelFormat(OF_PIXELS_RGBA);
+    content.loadMovie("ESC_Content_start.mov");
+  //  content.play();
+    content.setVolume(0.1);
     
-    
+    textureFront[0].loadImage("textureFront.png");
+    textureFront[1].loadImage("textureFront2.png");
+    textureFront[2].loadImage("textureFront3.png");
 #ifdef SYPHON
     syphonCam.setup();
     syphonCam.set("Screen 1","Millumin");
@@ -107,12 +113,12 @@ void testApp::setup() {
     
 #ifdef VIDEO
     //Video setup
-    img.loadMovie("test.mov");
-    img.play();
+    img.loadMovie("3boxes_threshold_100.mov");
+    //img.play();
 #endif
     
   //  ofSetWindowPosition(-1900, 0);
-    ofToggleFullscreen();
+    //ofToggleFullscreen();
     
     
     textureBack.loadImage("Box_Back.png");
@@ -125,8 +131,14 @@ void testApp::setup() {
 
 //---------------------------------------------------------------------------------------------------------
 
-
+int frame;
 void testApp::update() {
+   frame = ofGetFrameNum()  +2600;
+   frame = ofGetMouseX()+1200;
+    content.setFrame( (float)frame  );
+    img.setFrame( (float)(frame)  );
+    
+    content.update();
     
     while(oscReceiver.hasWaitingMessages()){
         ofxOscMessage m;
@@ -370,6 +382,10 @@ void testApp::draw() {
     output.begin();
     ofClear(0, 0, 0);
     ofSetColor(255,255,255);
+    ofDrawBitmapString("Frame: "+ofToString(frame ), ofPoint(10,20));
+    
+    ofDrawBitmapString("Frame: "+ofToString(content.getPosition() * content.getDuration() *25.0  ), ofPoint(10,40));
+    ofDrawBitmapString("Frame: "+ofToString(img.getPosition() * img.getDuration() *25.0  ), ofPoint(10,60));
 
     if(setThreshold){
         cv::threshold(cvBwImage, cvBwImage,threshold, 255, cv::THRESH_BINARY);
@@ -380,9 +396,11 @@ void testApp::draw() {
     }
     else {
 #ifdef BLACKMAGIC
-        cam.getColorTexture().draw(0, 0, ofGetWidth(), ofGetHeight());
+     
+        // cam.getColorTexture().draw(0, 0, ofGetWidth(), ofGetHeight());
 #else
-      //  img.draw(0, 0, ofGetWidth(), ofGetHeight());
+     if(debug)
+         img.draw(0, 0, ofGetWidth(), ofGetHeight());
 #endif
     }
 
@@ -451,24 +469,46 @@ void testApp::draw() {
     
     ofSetColor(255,255,255);
 
-  //  if(debug){
+    if(debug){
         ofDrawBitmapString(ofToString(ofGetFrameRate())+" "+ofToString(ofGetWidth())+"x"+ofToString(ofGetHeight()), ofPoint(10,20));
-   // }
+    }
     
 
-    for(int i=0;i<trackers.size();i++){
-        drawBox(i);
+    if(!debug){
+        for(int i=0;i<trackers.size();i++){
+            drawBox(i,0);
+        }
     }
     output.end();
     
-    syphonOut.publishTexture(&output.getTextureReference());
+    
+    
+    if(img.isFrameNew())
+        syphonOut.publishTexture(&output.getTextureReference());
+    
     output.draw(0,0);
+    
+    ofPixels pixels;
+  //  output.readToPixels(pixels);
+   // ofSaveImage(pixels, "frames/frame"+ofToString(frame)+".png");
+    
+    
 }
 //---------------------------------------------------------------------------------------------------------
 
-void testApp::drawBox(int box){
+void testApp::drawBox(int box, int mode){
     
     float patternAspect = 1.3;
+    ofVec2f offset;
+ /*   if(box == 0){
+        offset = ofVec2f(-0.7,0);
+    }*/
+    if(box == 1){
+        offset = ofVec2f(-1,-0);
+    }
+    if(box == 2){
+        offset = ofVec2f(-2.1,-0.8);
+    }
     
     //First create the mask of the box
     mask[box].begin();{
@@ -483,13 +523,15 @@ void testApp::drawBox(int box){
         ofTranslate(5*patternAspect, 5);
         glScaled(scale, scale, scale);
         
+        ofTranslate(offset);
+        
         ofSetColor(255, 255, 255);
         ofRect(-25, -25, 0, 50, 50);
         
         glPopMatrix();
         
         ofDisableDepthTest();
-    }mask[box].end();
+    } mask[box].end();
     
     
     /*trackers[box].getDistortedIntrinsics().loadProjectionMatrix();
@@ -529,7 +571,7 @@ void testApp::drawBox(int box){
             
             ofTranslate(5*patternAspect, 5);
             glScaled(scale, scale, -scale);
-            
+            ofTranslate(offset);
             
             ofFill();
             ofSetColor(255,255,255,255);
@@ -555,10 +597,12 @@ void testApp::drawBox(int box){
             
       //      textureGradient.draw(-25, -25, 0, 50, 2);
     //        textureGradient.draw(-25, 25, 0, 50, -2);
+            
+           // textureFront[box].draw(-25,-25,50,50);
             ofPushMatrix();{
                 ofRotate(90, 0, 0, 1);
-//                textureGradient.draw(-25, -25, 0, 50, 2);
-  //              textureGradient.draw(-25, 25, 0, 50, -2);
+                //                textureGradient.draw(-25, -25, 0, 50, 2);
+                //              textureGradient.draw(-25, 25, 0, 50, -2);
                 
             } ofPopMatrix();
             
@@ -566,26 +610,49 @@ void testApp::drawBox(int box){
                 //img.draw(-15,-2, 30, 30);
                 ofFill();
                 ofSetColor(255,255,255);
-                ofTranslate(0, 0,-25);
-	       // syphon.draw(-25, -25, 50,50);
-        /*
-         FEATURE: Adding Syphon-input to the box
-         */
-		syphon.bind();
+//                ofTranslate(0, 0,-25);
+                // syphon.draw(-25, -25, 50,50);
+                /*
+                 FEATURE: Adding Syphon-input to the box
+                 */
+                content.getTextureReference().bind();
+                
+                int b = box +1;
+                float w = content.getWidth()/3.0;
+              /*glBegin(GL_QUADS);
+                glTexCoord2d(w*b+w, 0); glVertex3d(-25, 25, -25);
+                glTexCoord2d(w*b, 0); glVertex3d(25, 25, -25);
+                glTexCoord2d(w*b, content.getHeight()); glVertex3d(25, -25, -25);
+                glTexCoord2d(w*b+w, content.getHeight()); glVertex3d(-25, -25, -25);
+                glEnd();
+            */
 
-		float w = syphon.getWidth()/3.0;
-		glBegin(GL_QUADS);
-		glTexCoord2d(w*box+w, 0); glVertex2d(-25, -25);
-		glTexCoord2d(w*box, 0); glVertex2d(25, -25);
-		glTexCoord2d(w*box, syphon.getHeight()); glVertex2d(25, 25);
-		glTexCoord2d(w*box+w, syphon.getHeight()); glVertex2d(-25, 25);
-		glEnd();
+             //   ofDisableDepthTest();
+               /* ofSetColor(0, 0, 0);
+                glBegin(GL_QUADS);
+                glTexCoord2d(w*box+w, 0); glVertex3d(-25, -25, -75);
+                glTexCoord2d(w*box, 0); glVertex3d(25, -25, -75);
+                glTexCoord2d(w*box, content.getHeight()); glVertex3d(25, -25, -25);
+                glTexCoord2d(w*box+w, content.getHeight()); glVertex3d(-25, -25, -25);
+                glEnd();
+                
+                glBegin(GL_QUADS);
+                glTexCoord2d(w*box+w, 0); glVertex3d(-25, 0, -50);
+                glTexCoord2d(w*box, 0); glVertex3d(25, 0, -50);
+                glTexCoord2d(w*box, content.getHeight()); glVertex3d(25, -50, -50);
+                glTexCoord2d(w*box+w, content.getHeight()); glVertex3d(-25, -50, -50);
 
-		syphon.unbind();
+                glEnd();*/
+
+                ofSetColor(255, 255, 255);
+                
+                
+                
+                content.getTextureReference().unbind();
                 
             }ofPopMatrix();
             
-         //   ofDisableLighting();
+            //   ofDisableLighting();
             ofDisableDepthTest();
             
         } ofPopMatrix();
@@ -642,6 +709,7 @@ void testApp::drawBox(int box){
     ofPopMatrix();
     
     
+
 }
 //---------------------------------------------------------------------------------------------------------
 
